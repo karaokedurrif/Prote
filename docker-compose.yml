@@ -59,7 +59,7 @@ services:
       - backend
     networks:
       - prota-network
-      - proxy
+      - npm_default
     restart: unless-stopped
 
 volumes:
@@ -68,5 +68,5 @@ volumes:
 networks:
   prota-network:
     driver: bridge
-  proxy:
+  npm_default:
     external: true
