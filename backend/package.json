@@ -1,7 +1,7 @@
 {
-  "name": "proteccion-civil-backend",
+  "name": "prota-backend",
   "version": "1.0.0",
-  "description": "Backend API para sistema de Protección Civil",
+  "description": "Backend del Sistema Prota",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
