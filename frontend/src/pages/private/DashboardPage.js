@@ -100,21 +100,6 @@ const DashboardPage = () => {
           </div>
         </Link>
       </div>
-            </div>
-            <div className="text-4xl opacity-50">📦</div>
-          </div>
-        </div>
-        
-        <div className="card bg-gradient-to-br from-orange-500 to-orange-600 text-white">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-orange-100">Balance</p>
-              <p className="text-3xl font-bold mt-2">+12.5k€</p>
-            </div>
-            <div className="text-4xl opacity-50">💰</div>
-          </div>
-        </div>
-      </div>
       
       {/* Accesos rápidos */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
