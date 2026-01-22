@@ -39,6 +39,7 @@ import MeshMapPage from './pages/private/MeshMapPage';
 import WeatherPage from './pages/private/WeatherPage';
 import DronesPage from './pages/private/DronesPage';
 import RiskMapPage from './pages/private/RiskMapPage';
+import TrialRegistrationsPage from './pages/private/TrialRegistrationsPage';
 
 // Componentes
 import ProtectedRoute from './components/ProtectedRoute';
@@ -88,6 +89,7 @@ function App() {
             <Route path="/meteorologia" element={<WeatherPage />} />
             <Route path="/drones" element={<DronesPage />} />
             <Route path="/mapa-riesgos" element={<RiskMapPage />} />
+            <Route path="/registros-trial" element={<TrialRegistrationsPage />} />
           </Route>
         </Routes>
       </Router>

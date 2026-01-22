@@ -20,6 +20,7 @@ const logger = require('./config/logger');
 // Importar rutas
 const authRoutes = require('./routes/auth.routes');
 const publicRoutes = require('./routes/public.routes');
+const adminRoutes = require('./routes/admin.routes');
 const volunteerRoutes = require('./routes/volunteer.routes');
 const inventoryRoutes = require('./routes/inventory.routes');
 const financeRoutes = require('./routes/finance.routes');
@@ -83,6 +84,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Rutas de la API
 app.use('/api/auth', authRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/finance', financeRoutes);

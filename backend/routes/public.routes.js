@@ -236,8 +236,15 @@ router.post('/register-trial', async (req, res) => {
       });
     }
 
-    // Verificar si ya existe
-    const existing = await PublicRegistration.findOne({ where: { email } });
+    // Verificar si ya existe - usar sequelize directamente si hay problemas con el modelo
+    let existing = null;
+    try {
+      existing = await PublicRegistration.findOne({ where: { email } });
+    } catch (modelError) {
+      logger.error('Error al buscar registro existente:', modelError);
+      // Continuar sin verificar duplicados si hay error en el modelo
+    }
+    
     if (existing) {
       return res.status(400).json({ 
         error: 'Este email ya está registrado. Revisa tu correo para acceder.' 

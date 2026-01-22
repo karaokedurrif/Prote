@@ -26,6 +26,7 @@ const PrivateLayout = () => {
     { path: '/inventario', icon: '📦', label: 'Inventario' },
     { path: '/finanzas', icon: '💰', label: 'Finanzas', roles: ['admin', 'tesorero'] },
     { path: '/subvenciones', icon: '🔍', label: 'Subvenciones', roles: ['admin'] },
+    { path: '/registros-trial', icon: '🆕', label: 'Registros Trial', roles: ['admin'] },
     { path: '/mapa-mesh', icon: '📡', label: 'Mapa Mesh' },
     { path: '/meteorologia', icon: '🌤️', label: 'Meteorología' },
     { path: '/mapa-riesgos', icon: '🗺️', label: 'Mapa Riesgos' },
