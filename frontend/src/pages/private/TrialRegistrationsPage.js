@@ -140,25 +140,25 @@ const TrialRegistrationsPage = () => {
       </Card>
 
       <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-bold text-blue-900 mb-2">Usuarios de Prueba</h3>
+        <h3 className="font-bold text-blue-900 mb-2">Usuarios del Sistema</h3>
         <p className="text-sm text-blue-800 mb-3">
-          Estos usuarios están pre-configurados para probar el sistema:
+          Usuarios configurados para acceder al sistema:
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded p-3 border">
             <p className="font-semibold text-sm">Admin</p>
-            <p className="text-xs text-gray-600">admin@proteccioncivil.org</p>
+            <p className="text-xs text-gray-600">admin@resqnet.es</p>
             <p className="text-xs text-gray-600">Password: Admin123!</p>
           </div>
           <div className="bg-white rounded p-3 border">
-            <p className="font-semibold text-sm">Tesorero</p>
-            <p className="text-xs text-gray-600">tesorero@proteccioncivil.org</p>
-            <p className="text-xs text-gray-600">Password: Tesorero123!</p>
+            <p className="font-semibold text-sm">Juan (Tesorero)</p>
+            <p className="text-xs text-gray-600">juan@resqnet.es</p>
+            <p className="text-xs text-gray-600">Password: Admin123!</p>
           </div>
           <div className="bg-white rounded p-3 border">
-            <p className="font-semibold text-sm">Voluntario</p>
-            <p className="text-xs text-gray-600">voluntario@proteccioncivil.org</p>
-            <p className="text-xs text-gray-600">Password: Voluntario123!</p>
+            <p className="font-semibold text-sm">David (Voluntario)</p>
+            <p className="text-xs text-gray-600">david@resqnet.es</p>
+            <p className="text-xs text-gray-600">Password: Admin123!</p>
           </div>
         </div>
       </div>

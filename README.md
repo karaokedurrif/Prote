@@ -233,23 +233,31 @@ Prote/
 └── README.md                   # Este archivo
 ```
 
-## 👤 Usuarios de Prueba
+## 👤 Usuarios del Sistema
 
-Después de ejecutar `npm run seed`, tendrás estos usuarios:
+Usuarios configurados para acceder al sistema:
 
 ```
 Admin:
-- Email: admin@proteccioncivil.org
+- Email: admin@resqnet.es
 - Password: Admin123!
+- Rol: Administrador
 
-Tesorero:
-- Email: tesorero@proteccioncivil.org
-- Password: Tesorero123!
+Juan:
+- Email: juan@resqnet.es
+- Password: Admin123!
+- Rol: Tesorero
 
-Voluntario:
-- Email: voluntario@proteccioncivil.org
-- Password: Voluntario123!
+David:
+- Email: david@resqnet.es
+- Password: Admin123!
+- Rol: Voluntario
 ```
+
+## 🌐 Dominios
+
+- **www.resqnet.es** - Landing page y registro de demos
+- **app.resqnet.es** - Aplicación privada (login requerido)
 
 ## 🔐 Seguridad
 
