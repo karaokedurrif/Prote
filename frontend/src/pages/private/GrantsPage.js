@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Badge, Alert, Modal } from '../../components/ui';
+import { Card, Button, Badge, Modal } from '../../components/ui';
 import api from '../../services/api';
 
 export default function GrantsPage() {

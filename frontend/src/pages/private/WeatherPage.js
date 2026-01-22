@@ -16,6 +16,7 @@ export default function WeatherPage() {
 
   useEffect(() => {
     fetchWeatherData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchWeatherData = async () => {
