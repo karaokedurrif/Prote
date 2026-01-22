@@ -9,6 +9,10 @@ export default function GrantsPage() {
   const [search, setSearch] = useState('');
   const [selectedGrant, setSelectedGrant] = useState(null);
   const [scraping, setScraping] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [documentResult, setDocumentResult] = useState(null);
 
   useEffect(() => {
     fetchGrants();
@@ -52,6 +56,34 @@ export default function GrantsPage() {
       alert('Error al buscar subvenciones automáticamente');
     } finally {
       setScraping(false);
+    }
+  };
+
+  const handleAnalyze = async (grant) => {
+    setAnalyzing(true);
+    try {
+      const response = await api.post(`/grants/${grant.id}/analyze`);
+      setAnalysisResult(response.data);
+      setSelectedGrant(grant);
+    } catch (error) {
+      console.error('Error en análisis:', error);
+      alert('Error al analizar la subvención');
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const handleGenerateDocument = async (grant) => {
+    setGenerating(true);
+    try {
+      const response = await api.post(`/grants/${grant.id}/generate-document`);
+      setDocumentResult(response.data);
+      setSelectedGrant(grant);
+    } catch (error) {
+      console.error('Error al generar documento:', error);
+      alert('Error al generar la documentación');
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -219,11 +251,22 @@ export default function GrantsPage() {
                     <Button 
                       size="sm" 
                       className="bg-blue-500 hover:bg-blue-600"
-                      onClick={() => setSelectedGrant(grant)}
+                      onClick={() => {
+                        setSelectedGrant(grant);
+                        setAnalysisResult(null);
+                        setDocumentResult(null);
+                      }}
                     >
                       Ver detalles
                     </Button>
-                    <Button size="sm" variant="outline">📄 Generar doc</Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleGenerateDocument(grant)}
+                      disabled={generating}
+                    >
+                      {generating ? '⏳ Generando...' : '📄 Generar doc'}
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -317,12 +360,144 @@ export default function GrantsPage() {
               </div>
             )}
 
+            {/* Análisis IA */}
+            {analysisResult && (
+              <div className="border-t pt-4 mt-4">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">📊 Análisis de Viabilidad</h3>
+                
+                <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">Probabilidad de éxito:</span>
+                    <span className="text-2xl font-bold text-blue-600">
+                      {analysisResult.analisis.probabilidadExito}%
+                    </span>
+                  </div>
+                  <div className="mt-2 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{width: `${analysisResult.analisis.probabilidadExito}%`}}
+                    ></div>
+                  </div>
+                </div>
+
+                {analysisResult.analisis.puntosFuertes.length > 0 && (
+                  <div className="mb-3">
+                    <h4 className="font-semibold text-green-700 mb-2">✅ Puntos Fuertes</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {analysisResult.analisis.puntosFuertes.map((punto, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{punto}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {analysisResult.analisis.puntosDebiles.length > 0 && (
+                  <div className="mb-3">
+                    <h4 className="font-semibold text-orange-700 mb-2">⚠️ Puntos Débiles</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {analysisResult.analisis.puntosDebiles.map((punto, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{punto}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {analysisResult.analisis.recomendaciones.length > 0 && (
+                  <div className="mb-3">
+                    <h4 className="font-semibold text-blue-700 mb-2">💡 Recomendaciones</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {analysisResult.analisis.recomendaciones.map((rec, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{rec}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Documento generado */}
+            {documentResult && (
+              <div className="border-t pt-4 mt-4">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">📄 Documento Generado</h3>
+                
+                <div className="bg-gray-50 p-4 rounded-lg space-y-4 max-h-96 overflow-y-auto">
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Datos Identificativos</h4>
+                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">
+                      {documentResult.secciones.datosIdentificativos}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Memoria de Actividades</h4>
+                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">
+                      {documentResult.secciones.memoriaActividades}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Justificación</h4>
+                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">
+                      {documentResult.secciones.justificacionNecesidad}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Presupuesto</h4>
+                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">
+                      {documentResult.secciones.presupuesto}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Documentación Requerida</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {documentResult.secciones.documentacionRequerida.map((doc, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{doc}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-3 text-center">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      const text = `
+${documentResult.secciones.datosIdentificativos}
+
+${documentResult.secciones.memoriaActividades}
+
+${documentResult.secciones.justificacionNecesidad}
+
+${documentResult.secciones.presupuesto}
+                      `.trim();
+                      navigator.clipboard.writeText(text);
+                      alert('Documento copiado al portapapeles');
+                    }}
+                  >
+                    📋 Copiar al portapapeles
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-2 pt-4">
-              <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                📄 Generar documentación
+              <Button 
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                onClick={() => handleGenerateDocument(selectedGrant)}
+                disabled={generating}
+              >
+                {generating ? '⏳ Generando...' : '📄 Generar documentación'}
               </Button>
-              <Button variant="outline" className="flex-1">
-                📊 Análisis IA
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => handleAnalyze(selectedGrant)}
+                disabled={analyzing}
+              >
+                {analyzing ? '⏳ Analizando...' : '📊 Análisis IA'}
               </Button>
             </div>
           </div>
