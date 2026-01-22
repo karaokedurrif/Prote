@@ -12,11 +12,11 @@ export default function WeatherPage() {
   const [forecast, setForecast] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState('Madrid');
+  const [location, setLocation] = useState('Palazuelos de Eresma');
 
   useEffect(() => {
     fetchWeatherData();
-  }, [location]);
+  }, []);
 
   const fetchWeatherData = async () => {
     try {

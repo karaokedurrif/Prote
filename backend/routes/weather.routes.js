@@ -11,20 +11,17 @@ const logger = require('../config/logger');
 
 /**
  * GET /api/weather/current
- * Obtener datos actuales de todas las estaciones
+ * Obtener datos actuales en formato OpenWeatherMap
  */
 router.get('/current', optionalAuth, async (req, res) => {
   try {
-    const { municipio } = req.query;
+    const location = req.query.location || 'Palazuelos de Eresma';
+    const weatherService = require('../services/weather.service');
     
-    // Obtener último registro de cada estación
-    const datos = await WeatherData.findAll({
-      where: municipio ? { municipio } : {},
-      order: [['timestamp', 'DESC']],
-      limit: 10
-    });
+    // Obtener datos directamente de OpenWeatherMap
+    const weatherData = await weatherService.getCurrentWeather(location);
     
-    res.json(datos);
+    res.json(weatherData);
     
   } catch (error) {
     logger.error('Error al obtener datos meteorológicos:', error);

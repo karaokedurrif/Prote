@@ -17,19 +17,86 @@ class WeatherService {
     this.estaciones = [
       {
         id: 'EST001',
-        nombre: 'Aldeanueva de Ebro',
-        municipio: 'Aldeanueva de Ebro',
-        latitud: 42.2871,
-        longitud: -2.1371
-      },
-      {
-        id: 'EST002',
-        nombre: 'Cornago',
-        municipio: 'Cornago',
-        latitud: 42.1432,
-        longitud: -2.1456
+        nombre: 'Palazuelos de Eresma',
+        municipio: 'Palazuelos de Eresma',
+        latitud: 40.9167,
+        longitud: -4.0333
       }
     ];
+  }
+
+  /**
+   * Obtener clima actual para el frontend
+   */
+  async getCurrentWeather(location = 'Palazuelos de Eresma') {
+    try {
+      if (!this.apiKey) {
+        throw new Error('API key de OpenWeather no configurada');
+      }
+
+      // Obtener datos actuales
+      const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)},ES&appid=${this.apiKey}&units=metric&lang=es`;
+      const currentResponse = await axios.get(currentUrl);
+      const current = currentResponse.data;
+
+      // Obtener pronóstico
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)},ES&appid=${this.apiKey}&units=metric&lang=es`;
+      const forecastResponse = await axios.get(forecastUrl);
+      
+      // Procesar pronóstico (agrupar por día)
+      const dailyForecast = this.processForecast(forecastResponse.data.list);
+
+      return {
+        current: {
+          location: current.name,
+          temp: current.main.temp,
+          feels_like: current.main.feels_like,
+          temp_min: current.main.temp_min,
+          temp_max: current.main.temp_max,
+          pressure: current.main.pressure,
+          humidity: current.main.humidity,
+          visibility: current.visibility,
+          wind_speed: current.wind.speed,
+          wind_deg: current.wind.deg,
+          clouds: current.clouds.all,
+          condition: current.weather[0].main,
+          description: current.weather[0].description,
+          icon: current.weather[0].icon,
+          sunrise: current.sys.sunrise,
+          sunset: current.sys.sunset,
+          rain: current.rain || null
+        },
+        forecast: dailyForecast,
+        alerts: []
+      };
+    } catch (error) {
+      logger.error('Error obteniendo clima:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Procesar pronóstico para obtener datos diarios
+   */
+  processForecast(list) {
+    const dailyData = {};
+    
+    list.forEach(item => {
+      const date = new Date(item.dt * 1000).toLocaleDateString('es-ES');
+      if (!dailyData[date]) {
+        dailyData[date] = {
+          dt: item.dt,
+          temp: { min: item.main.temp, max: item.main.temp },
+          humidity: item.main.humidity,
+          weather: item.weather
+        };
+      } else {
+        dailyData[date].temp.min = Math.min(dailyData[date].temp.min, item.main.temp);
+        dailyData[date].temp.max = Math.max(dailyData[date].temp.max, item.main.temp);
+      }
+    });
+
+    return Object.values(dailyData).slice(0, 5);
   }
 
   /**
