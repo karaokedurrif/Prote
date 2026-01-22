@@ -8,13 +8,13 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const cron = require('node-cron');
 const { Grant } = require('../models');
-const { io } = require('../server');
 const logger = require('../config/logger');
 
 class AdvancedGrantScraperService {
   constructor() {
     this.scheduledJobs = [];
     this.alertThreshold = 70; // Relevancia mínima para alertar
+    this.io = null; // Se establecerá después desde server.js
     
     // Fuentes múltiples de subvenciones
     this.sources = [
@@ -509,8 +509,8 @@ class AdvancedGrantScraperService {
     logger.info(`🚨 ALERTA: Nueva subvención relevante - ${grant.titulo}`);
     
     // Emitir a todos los clientes conectados
-    if (io) {
-      io.emit('grant:new', {
+    if (this.io) {
+      this.io.emit('grant:new', {
         id: grant.id,
         titulo: grant.titulo,
         organismo: grant.organismo,
@@ -546,8 +546,8 @@ class AdvancedGrantScraperService {
       logger.warn(`⏰ PLAZO URGENTE: ${grant.titulo} - Vence en ${this.getDaysUntil(grant.fecha_limite)} días`);
       
       // Emitir alerta urgente
-      if (io) {
-        io.emit('grant:urgent', {
+      if (this.io) {
+        this.io.emit('grant:urgent', {
           id: grant.id,
           titulo: grant.titulo,
           dias_restantes: this.getDaysUntil(grant.fecha_limite)
@@ -583,6 +583,14 @@ class AdvancedGrantScraperService {
   stopAllJobs() {
     this.scheduledJobs.forEach(job => job.stop());
     logger.info('Scraping programado detenido');
+  }
+
+  /**
+   * Establecer instancia de Socket.io
+   */
+  setSocketIO(socketIO) {
+    this.io = socketIO;
+    logger.info('Socket.io configurado en AdvancedGrantScraper');
   }
 }
 

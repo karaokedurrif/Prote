@@ -192,6 +192,7 @@ const startServer = async () => {
       logger.info('✓ Servicio Meshtastic inicializado');
       
       // Servicio avanzado de scraping de subvenciones
+      advancedGrantScraper.setSocketIO(io);
       advancedGrantScraper.startScheduledScraping();
       logger.info('✓ Sistema avanzado de scraping de subvenciones iniciado');
       
