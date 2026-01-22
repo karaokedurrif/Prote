@@ -3,7 +3,7 @@
  * Muestra posiciones de voluntarios, vehículos y eventos en tiempo real
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import io from 'socket.io-client';
