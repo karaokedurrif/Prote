@@ -178,6 +178,32 @@ router.post('/:id/generate-document', authenticate, async (req, res) => {
 });
 
 /**
+ * POST /api/grants/scrape
+ * Ejecutar scraping automático y devolver resultados
+ */
+router.post('/scrape', authenticate, async (req, res) => {
+  if (req.user.rol !== 'admin') {
+    return res.status(403).json({ error: 'No autorizado' });
+  }
+  try {
+    logger.info('Iniciando scraping de subvenciones...');
+    const result = await advancedGrantScraper.runManualScraping();
+    
+    res.json({ 
+      mensaje: 'Scraping completado',
+      nuevas: result.nuevas || 0,
+      actualizadas: result.actualizadas || 0,
+      total: result.total || 0,
+      timestamp: new Date()
+    });
+    
+  } catch (error) {
+    logger.error('Error en scraping:', error);
+    res.status(500).json({ error: 'Error al realizar scraping' });
+  }
+});
+
+/**
  * POST /api/grants/scrape/manual
  * Ejecutar scraping manual de todas las fuentes
  */
