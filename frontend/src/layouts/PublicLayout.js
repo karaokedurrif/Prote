@@ -85,14 +85,102 @@ const PublicLayout = () => {
                 {t('nav.login')}
               </Link>
             </div>
-                className="px-4 py-2 rounded-lg bg-gradient-accent text-white shadow-medium hover:shadow-strong hover:scale-105 transition-all duration-200 font-medium"
-              >
-                {t('nav.volunteer')}
-              </Link>
-              
-              <Link
-                to="/login"
-                className="px-5 py-2.5 rounded-lg bg-gradient-primary text-white shadow-medium hover:shadow-strong hover:scale-105 transition-all duration-200 font-medium"
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-4 py-2 rounded-lg ${
+                    isActive(item.path)
+                      ? 'bg-primary-50 text-primary-600'
+                      : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="mt-4 pt-4 border-t space-y-2">
+                <LanguageSelector />
+                <Link
+                  to="/register-trial"
+                  className="block text-center px-4 py-2 rounded-lg bg-gray-200 text-gray-800"
+                >
+                  {t('nav.startTrial')}
+                </Link>
+                <Link
+                  to="/login"
+                  className="block text-center px-4 py-2 rounded-lg bg-blue-600 text-white"
+                >
+                  {t('nav.login')}
+                </Link>
+              </div>
+            </div>
+          )}
+        </nav>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">{t('landing.footer.product')}</h3>
+              <ul className="space-y-2">
+                <li><Link to="/" className="hover:text-blue-400">{t('landing.footer.features')}</Link></li>
+                <li><Link to="/" className="hover:text-blue-400">{t('landing.footer.pricing')}</Link></li>
+                <li><Link to="/" className="hover:text-blue-400">{t('landing.footer.demo')}</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">{t('landing.footer.company')}</h3>
+              <ul className="space-y-2">
+                <li><Link to="/quienes-somos" className="hover:text-blue-400">{t('landing.footer.about')}</Link></li>
+                <li><Link to="/contacto" className="hover:text-blue-400">{t('landing.footer.contact')}</Link></li>
+                <li><Link to="/noticias" className="hover:text-blue-400">{t('landing.footer.blog')}</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">{t('landing.footer.legal')}</h3>
+              <ul className="space-y-2">
+                <li><Link to="/privacidad" className="hover:text-blue-400">{t('landing.footer.privacy')}</Link></li>
+                <li><Link to="/terminos" className="hover:text-blue-400">{t('landing.footer.terms')}</Link></li>
+                <li><Link to="/cookies" className="hover:text-blue-400">{t('landing.footer.cookies')}</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">ResqNet</h3>
+              <p className="text-gray-400">
+                {t('landing.footer.copyright')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default PublicLayout;
               >
                 {t('nav.login')}
               </Link>
