@@ -30,6 +30,7 @@ async function migrate() {
     logger.info('  - transporte_rural');
     logger.info('  - drones');
     logger.info('  - mapa_riesgos');
+    logger.info('  - public_registrations');
     
     process.exit(0);
     
