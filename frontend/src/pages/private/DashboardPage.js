@@ -2,52 +2,104 @@
  * Página del dashboard principal
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import useAuthStore from '../../store/authStore';
+import api from '../../services/api';
+import { Card } from '../../components/ui';
 
 const DashboardPage = () => {
   const { user } = useAuthStore();
+  const [stats, setStats] = useState({
+    volunteers: 0,
+    events: 0,
+    inventory: 0,
+    grants: 0,
+    finances: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      // Intentar obtener estadísticas del backend
+      const [volunteers, events, inventory, grants] = await Promise.all([
+        api.get('/volunteers').catch(() => ({ data: [] })),
+        api.get('/events').catch(() => ({ data: [] })),
+        api.get('/inventory').catch(() => ({ data: [] })),
+        api.get('/grants').catch(() => ({ data: [] }))
+      ]);
+
+      setStats({
+        volunteers: volunteers.data?.length || volunteers.data?.total || 0,
+        events: events.data?.length || events.data?.total || 0,
+        inventory: inventory.data?.length || inventory.data?.total || 0,
+        grants: grants.data?.length || grants.data?.total || 0,
+        finances: 0
+      });
+    } catch (error) {
+      console.error('Error al obtener estadísticas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   return (
-    <div>
+    <div className="space-y-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800">
           Bienvenido, {user?.nombre}
         </h1>
         <p className="text-gray-600 mt-2">
-          Panel de control del sistema de gestión
+          Panel de control del sistema de gestión ResqNet
         </p>
       </div>
       
       {/* Estadísticas rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="card bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+        <Link to="/voluntarios" className="card bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:shadow-lg transition-shadow">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-blue-100">Voluntarios</p>
-              <p className="text-3xl font-bold mt-2">156</p>
+              <p className="text-3xl font-bold mt-2">{loading ? '...' : stats.volunteers}</p>
             </div>
             <div className="text-4xl opacity-50">👥</div>
           </div>
-        </div>
+        </Link>
         
-        <div className="card bg-gradient-to-br from-green-500 to-green-600 text-white">
+        <Link to="/eventos" className="card bg-gradient-to-br from-green-500 to-green-600 text-white hover:shadow-lg transition-shadow">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-green-100">Eventos (Mes)</p>
-              <p className="text-3xl font-bold mt-2">24</p>
+              <p className="text-green-100">Eventos</p>
+              <p className="text-3xl font-bold mt-2">{loading ? '...' : stats.events}</p>
             </div>
             <div className="text-4xl opacity-50">📅</div>
           </div>
-        </div>
+        </Link>
         
-        <div className="card bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+        <Link to="/inventario" className="card bg-gradient-to-br from-purple-500 to-purple-600 text-white hover:shadow-lg transition-shadow">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-purple-100">Equipos</p>
-              <p className="text-3xl font-bold mt-2">342</p>
+              <p className="text-3xl font-bold mt-2">{loading ? '...' : stats.inventory}</p>
+            </div>
+            <div className="text-4xl opacity-50">📦</div>
+          </div>
+        </Link>
+        
+        <Link to="/subvenciones" className="card bg-gradient-to-br from-orange-500 to-orange-600 text-white hover:shadow-lg transition-shadow">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-orange-100">Subvenciones</p>
+              <p className="text-3xl font-bold mt-2">{loading ? '...' : stats.grants}</p>
+            </div>
+            <div className="text-4xl opacity-50">🔍</div>
+          </div>
+        </Link>
+      </div>
             </div>
             <div className="text-4xl opacity-50">📦</div>
           </div>
