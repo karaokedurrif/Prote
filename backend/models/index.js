@@ -22,6 +22,7 @@ const EventVolunteer = require('./EventVolunteer.model');
 const Drone = require('./Drone.model');
 const RiskMapLayer = require('./RiskMapLayer.model');
 const Vehicle = require('./Vehicle.model');
+const PublicRegistration = require('./PublicRegistration.model');
 
 // Definir relaciones entre modelos
 
@@ -97,5 +98,6 @@ module.exports = {
   Transport,
   Drone,
   RiskMapLayer,
-  Vehicle
+  Vehicle,
+  PublicRegistration
 };

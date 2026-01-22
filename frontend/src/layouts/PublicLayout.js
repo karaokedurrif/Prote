@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../components/landing/LanguageSelector';
 import logo from '../assets/logo.svg';
 
 const PublicLayout = () => {
@@ -68,16 +69,22 @@ const PublicLayout = () => {
 
             {/* Botones de acción */}
             <div className="hidden md:flex items-center gap-3">
-              <button
-                onClick={toggleLanguage}
-                className="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors text-sm font-medium"
-                title="Cambiar idioma"
-              >
-                {i18n.language === 'es' ? '🇬🇧 EN' : '🇪🇸 ES'}
-              </button>
+              <LanguageSelector />
               
               <Link
-                to="/volunteer-request"
+                to="/register-trial"
+                className="btn-secondary"
+              >
+                {t('nav.startTrial')}
+              </Link>
+              
+              <Link
+                to="/login"
+                className="btn-primary"
+              >
+                {t('nav.login')}
+              </Link>
+            </div>
                 className="px-4 py-2 rounded-lg bg-gradient-accent text-white shadow-medium hover:shadow-strong hover:scale-105 transition-all duration-200 font-medium"
               >
                 {t('nav.volunteer')}

@@ -5,9 +5,11 @@
 
 const express = require('express');
 const router = express.Router();
-const { News, Announcement, Event, Transport } = require('../models');
+const { News, Announcement, Event, Transport, PublicRegistration, User } = require('../models');
 const { optionalAuth } = require('../middleware/auth.middleware');
 const logger = require('../config/logger');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 /**
  * GET /api/public/news
@@ -208,6 +210,92 @@ router.post('/volunteer-request', async (req, res) => {
   } catch (error) {
     logger.error('Error en solicitud de voluntariado:', error);
     res.status(500).json({ error: 'Error al enviar solicitud' });
+  }
+});
+
+/**
+ * POST /api/public/register-trial
+ * Registro para cuenta trial de ResqNet
+ */
+router.post('/register-trial', async (req, res) => {
+  try {
+    const { 
+      email, 
+      firstName, 
+      lastName, 
+      organization, 
+      phone, 
+      country = 'ES', 
+      language = 'es' 
+    } = req.body;
+
+    // Validación
+    if (!email || !firstName || !lastName || !organization) {
+      return res.status(400).json({ 
+        error: 'Email, nombre, apellidos y organización son obligatorios' 
+      });
+    }
+
+    // Verificar si ya existe
+    const existing = await PublicRegistration.findOne({ where: { email } });
+    if (existing) {
+      return res.status(400).json({ 
+        error: 'Este email ya está registrado. Revisa tu correo para acceder.' 
+      });
+    }
+
+    // Crear trial (30 días)
+    const trialEndsAt = new Date();
+    trialEndsAt.setDate(trialEndsAt.getDate() + 30);
+
+    // Generar token de acceso temporal
+    const accessToken = jwt.sign(
+      { email, type: 'trial' },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+
+    // Crear usuario trial automático en tabla User
+    const password = Math.random().toString(36).slice(-12); // Password temporal
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      nombre: firstName,
+      apellidos: lastName,
+      rol: 'voluntario', // Rol básico para trials
+      activo: true
+    });
+
+    // Crear registro público
+    const registration = await PublicRegistration.create({
+      email,
+      firstName,
+      lastName,
+      organization,
+      phone,
+      country,
+      language,
+      trialEndsAt,
+      accessToken,
+      status: 'active'
+    });
+
+    logger.info(`Nueva cuenta trial registrada: ${email} - ${organization}`);
+
+    // TODO: Enviar email de bienvenida con credenciales
+
+    res.json({
+      mensaje: 'Cuenta trial creada con éxito. Revisa tu email para acceder.',
+      trialEndsAt,
+      email,
+      token: accessToken
+    });
+
+  } catch (error) {
+    logger.error('Error en registro trial:', error);
+    res.status(500).json({ error: 'Error al crear cuenta trial' });
   }
 });
 

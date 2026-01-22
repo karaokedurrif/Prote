@@ -22,6 +22,7 @@ import AnnouncementsPage from './pages/public/AnnouncementsPage';
 import TransportPage from './pages/public/TransportPage';
 import ContactPage from './pages/public/ContactPage';
 import VolunteerRequestPage from './pages/public/VolunteerRequestPage';
+import RegisterTrialPage from './pages/public/RegisterTrialPage';
 
 // Páginas de autenticación
 import LoginPage from './pages/auth/LoginPage';
@@ -68,6 +69,7 @@ function App() {
             <Route path="/transporte" element={<TransportPage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/voluntariado" element={<VolunteerRequestPage />} />
+            <Route path="/register-trial" element={<RegisterTrialPage />} />
           </Route>
 
           {/* Autenticación */}
