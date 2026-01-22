@@ -3,7 +3,7 @@
  * Muestra posiciones de voluntarios, vehículos y eventos en tiempo real
  */
 
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import io from 'socket.io-client';
@@ -12,9 +12,9 @@ import 'leaflet/dist/leaflet.css';
 // Fix para iconos de Leaflet en React
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
 // Iconos personalizados
@@ -312,7 +312,7 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
 
         {/* Marcadores de posiciones mesh (voluntarios) */}
         {filteredPositions.map((pos) => (
-          <Fragment key={pos.node_id}>
+          <React.Fragment key={pos.node_id}>
             <Marker
               position={[pos.latitud, pos.longitud]}
               icon={icons.volunteer}
@@ -368,13 +368,13 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                 }}
               />
             )}
-          </Fragment>
+          </React.Fragment>
         ))}
 
         {/* Marcadores de vehículos */}
         {filteredVehicles.map((vehicle) => (
           vehicle.latitud_actual && vehicle.longitud_actual && (
-            <Fragment key={vehicle.id}>
+            <React.Fragment key={vehicle.id}>
               <Marker
                 position={[vehicle.latitud_actual, vehicle.longitud_actual]}
                 icon={vehicle.tipo === 'ambulancia' ? icons.ambulance : icons.vehicle}
@@ -403,14 +403,14 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                   </div>
                 </Popup>
               </Marker>
-            </Fragment>
+            </React.Fragment>
           )
         ))}
 
         {/* Marcadores de eventos */}
         {filteredEvents.map((event) => (
           event.coordenadas && (
-            <Fragment key={event.id}>
+            <React.Fragment key={event.id}>
               <Marker
                 position={[event.coordenadas.coordinates[1], event.coordenadas.coordinates[0]]}
                 icon={event.tipo === 'emergencia' ? icons.incident : icons.event}
@@ -449,7 +449,7 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                   weight: 2
                 }}
               />
-            </Fragment>
+            </React.Fragment>
           )
         ))}
       </MapContainer>
