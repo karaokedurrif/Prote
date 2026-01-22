@@ -59,7 +59,8 @@ const PublicRegistration = sequelize.define('PublicRegistration', {
     }
   }, {
     tableName: 'public_registrations',
-    timestamps: true
+    timestamps: true,
+    underscored: true
   });
 
 module.exports = PublicRegistration;
