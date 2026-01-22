@@ -312,7 +312,7 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
 
         {/* Marcadores de posiciones mesh (voluntarios) */}
         {filteredPositions.map((pos) => (
-          <React.Fragment key={pos.node_id}>
+          <Fragment key={pos.node_id}>
             <Marker
               position={[pos.latitud, pos.longitud]}
               icon={icons.volunteer}
@@ -368,13 +368,13 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                 }}
               />
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
 
         {/* Marcadores de vehículos */}
         {filteredVehicles.map((vehicle) => (
           vehicle.latitud_actual && vehicle.longitud_actual && (
-            <React.Fragment key={vehicle.id}>
+            <Fragment key={vehicle.id}>
               <Marker
                 position={[vehicle.latitud_actual, vehicle.longitud_actual]}
                 icon={vehicle.tipo === 'ambulancia' ? icons.ambulance : icons.vehicle}
@@ -403,14 +403,14 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                   </div>
                 </Popup>
               </Marker>
-            </React.Fragment>
+            </Fragment>
           )
         ))}
 
         {/* Marcadores de eventos */}
         {filteredEvents.map((event) => (
           event.coordenadas && (
-            <React.Fragment key={event.id}>
+            <Fragment key={event.id}>
               <Marker
                 position={[event.coordenadas.coordinates[1], event.coordenadas.coordinates[0]]}
                 icon={event.tipo === 'emergencia' ? icons.incident : icons.event}
@@ -449,7 +449,7 @@ const LiveMeshMap = ({ mode = 'full', height = '600px', showControls = true }) =
                   weight: 2
                 }}
               />
-            </React.Fragment>
+            </Fragment>
           )
         ))}
       </MapContainer>
