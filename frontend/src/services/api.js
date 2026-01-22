@@ -6,7 +6,8 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Usar ruta relativa para que funcione con nginx proxy
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 // Crear instancia de Axios
 const apiClient = axios.create({
